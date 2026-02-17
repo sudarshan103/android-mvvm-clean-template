@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.arch.domain.exception.InternetNotEnabledException
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
 
 /**
  * Interceptor that checks for internet connectivity
@@ -17,7 +17,7 @@ class InternetCheckInterceptor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isInternetAvailable(context)) {
-            throw InternetNotEnabledException("No internet connection available")
+            throw IOException("No internet connection available")
         }
         return chain.proceed(chain.request())
     }
