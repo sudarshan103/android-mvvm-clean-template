@@ -1,0 +1,70 @@
+# IDE - Android Studio
+*.iml
+.idea/
+.gradle/
+.kotlin/
+*.swp
+*.swo
+*~
+
+# IDE - General
+.vscode/
+.settings/
+.project
+.classpath
+.c9/
+*.launch
+.DS_Store
+*.sublime-workspace
+
+# Build related
+/build/
+*/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+
+# Gradle files
+.gradle
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Generated files and KSP
+/app/build/
+/data/build/
+/domain/build/
+.kspCaches/
+
+
+# Signing keys
+*.jks
+*.keystore
+*.pem
+*.p12
+*.pfx
+
+# Backup files
+*.bak
+.tmp/
+
+# OS specific
+Thumbs.db
+ehthumbs.db
+.directory
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Miscellaneous
+*.class
+*.jar
+.externalNativeBuild
+.cxx
