@@ -20,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
-
     private val viewModel: TimeZoneViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,7 @@ class MainActivity : BaseActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     TimeZoneScreen(
                         viewModel = viewModel,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
                     )
                 }
             }

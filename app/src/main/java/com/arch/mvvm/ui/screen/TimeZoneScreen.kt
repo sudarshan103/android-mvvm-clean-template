@@ -40,7 +40,7 @@ import com.arch.mvvm.ui.ext.getUtcOffsetString
 @Composable
 fun TimeZoneScreen(
     viewModel: TimeZoneViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val detectedTimezone = TimezoneDetector.detectDeviceTimezone(context)
@@ -49,19 +49,20 @@ fun TimeZoneScreen(
     val timeZoneState by viewModel.timeZoneState.collectAsState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ScreenTitle()
 
         TimeZoneCard(
             title = "UTC Time",
             result = utcTimeState,
-            onRetry = { viewModel.fetchTimeZone(TimeZoneViewModel.UTC) }
+            onRetry = { viewModel.fetchTimeZone(TimeZoneViewModel.UTC) },
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -69,7 +70,7 @@ fun TimeZoneScreen(
         TimeZoneCard(
             title = "Device Timezone ($detectedTimezone)",
             result = timeZoneState,
-            onRetry = { viewModel.fetchTimeZone(detectedTimezone) }
+            onRetry = { viewModel.fetchTimeZone(detectedTimezone) },
         )
 
         TimeComparisonCard(timeZoneState)
@@ -79,7 +80,7 @@ fun TimeZoneScreen(
         ActionButtons(
             onFetchUtc = { viewModel.fetchTimeZone(TimeZoneViewModel.UTC) },
             onFetchDeviceTimezone = { viewModel.fetchTimeZone(detectedTimezone) },
-            onClearErrors = { viewModel.clearError() }
+            onClearErrors = { viewModel.clearError() },
         )
     }
 }
@@ -91,7 +92,7 @@ private fun ScreenTitle() {
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.padding(bottom = 24.dp)
+        modifier = Modifier.padding(bottom = 24.dp),
     )
 }
 
@@ -103,24 +104,26 @@ private fun TimeComparisonCard(timeZoneState: Result<TimeZone>?) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val backgroundColor = if (timesMatch) {
-            Color(0xFF4CAF50)
-        } else {
-            Color(0xFFF44336)
-        }
+        val backgroundColor =
+            if (timesMatch) {
+                Color(0xFF4CAF50)
+            } else {
+                Color(0xFFF44336)
+            }
 
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = backgroundColor)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = backgroundColor),
         ) {
             Text(
                 text = "Device Comparison:\n$comparison",
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp,
                 color = Color.White,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             )
         }
     }
@@ -130,13 +133,14 @@ private fun TimeComparisonCard(timeZoneState: Result<TimeZone>?) {
 private fun ActionButtons(
     onFetchUtc: () -> Unit,
     onFetchDeviceTimezone: () -> Unit,
-    onClearErrors: () -> Unit
+    onClearErrors: () -> Unit,
 ) {
     Button(
         onClick = onFetchUtc,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(48.dp),
     ) {
         Text("Fetch UTC Time")
     }
@@ -145,9 +149,10 @@ private fun ActionButtons(
 
     Button(
         onClick = onFetchDeviceTimezone,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(48.dp),
     ) {
         Text("Fetch Device Timezone")
     }
@@ -156,9 +161,10 @@ private fun ActionButtons(
 
     Button(
         onClick = onClearErrors,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(48.dp),
     ) {
         Text("Clear Errors")
     }
@@ -168,36 +174,40 @@ private fun ActionButtons(
 fun TimeZoneCard(
     title: String,
     result: Result<TimeZone>?,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.Start
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            horizontalAlignment = Alignment.Start,
         ) {
             Text(
                 text = title,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
 
             when (result) {
                 is Result.Success -> TimeZoneSuccessContent(result.data)
-                is Result.Error -> ErrorContent(
-                    message = result.exception.message ?: "Unknown error",
-                    onRetry = onRetry
-                )
+                is Result.Error ->
+                    ErrorContent(
+                        message = result.exception.message ?: "Unknown error",
+                        onRetry = onRetry,
+                    )
                 is Result.Loading -> LoadingContent()
                 null -> EmptyContent()
             }
@@ -211,37 +221,40 @@ private fun TimeZoneSuccessContent(timeZone: TimeZone) {
         text = "Time: ${timeZone.formatToDisplayDate()}",
         fontSize = 16.sp,
         fontWeight = FontWeight.SemiBold,
-        color = MaterialTheme.colorScheme.onPrimaryContainer
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
     )
     Spacer(modifier = Modifier.height(8.dp))
     Text(
         text = "Timezone: ${timeZone.timezone}",
         fontSize = 14.sp,
-        color = MaterialTheme.colorScheme.onPrimaryContainer
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
     )
     Text(
         text = "Abbreviation: ${timeZone.getAbbreviation()}",
         fontSize = 14.sp,
-        color = MaterialTheme.colorScheme.onPrimaryContainer
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
     )
     Text(
         text = "UTC Offset: ${timeZone.getUtcOffsetString()}",
         fontSize = 14.sp,
-        color = MaterialTheme.colorScheme.onPrimaryContainer
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
     )
 }
 
 @Composable
-private fun ErrorContent(message: String, onRetry: () -> Unit) {
+private fun ErrorContent(
+    message: String,
+    onRetry: () -> Unit,
+) {
     Text(
         text = "Error: $message",
         fontSize = 14.sp,
         color = MaterialTheme.colorScheme.error,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier.padding(vertical = 8.dp),
     )
     Button(
         onClick = onRetry,
-        modifier = Modifier.padding(top = 8.dp)
+        modifier = Modifier.padding(top = 8.dp),
     ) {
         Text("Retry")
     }
@@ -252,7 +265,7 @@ private fun LoadingContent() {
     Text(
         text = "Loading...",
         fontSize = 14.sp,
-        color = MaterialTheme.colorScheme.onPrimaryContainer
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
     )
 }
 
@@ -261,7 +274,6 @@ private fun EmptyContent() {
     Text(
         text = "No data loaded yet",
         fontSize = 14.sp,
-        color = MaterialTheme.colorScheme.onPrimaryContainer
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
     )
 }
-

@@ -5,10 +5,6 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 /**
- * Extension functions for TimeZone domain model formatting and comparison.
- */
-
-/**
  * Format the datetime string to display format.
  * Format: "Feb 16, 2026, 01:40pm"
  */
@@ -36,34 +32,36 @@ fun TimeZone.compareWithLocalTime(): Pair<String, Boolean> {
         val timezoneTime = OffsetDateTime.parse(datetime)
         val deviceTime = OffsetDateTime.now()
 
-        val diffMinutes = kotlin.math.abs(
-            timezoneTime.toInstant().epochSecond - deviceTime.toInstant().epochSecond
-        ) / 60
+        val diffMinutes =
+            kotlin.math.abs(
+                timezoneTime.toInstant().epochSecond - deviceTime.toInstant().epochSecond,
+            ) / 60
 
         val diffHours = diffMinutes / 60
         val diffMinutesRemainder = diffMinutes % 60
 
         val timesMatch = diffMinutes <= 1
 
-        val message = when {
-            timesMatch -> "Times match ✓"
-            timezoneTime.isBefore(deviceTime) -> {
-                val tzName = timezone.ifEmpty { "Timezone" }
-                if (diffMinutesRemainder == 0L) {
-                    "$tzName is behind by $diffHours hours"
-                } else {
-                    "$tzName is behind by $diffHours hours $diffMinutesRemainder minutes"
+        val message =
+            when {
+                timesMatch -> "Times match ✓"
+                timezoneTime.isBefore(deviceTime) -> {
+                    val tzName = timezone.ifEmpty { "Timezone" }
+                    if (diffMinutesRemainder == 0L) {
+                        "$tzName is behind by $diffHours hours"
+                    } else {
+                        "$tzName is behind by $diffHours hours $diffMinutesRemainder minutes"
+                    }
+                }
+                else -> {
+                    val tzName = timezone.ifEmpty { "Timezone" }
+                    if (diffMinutesRemainder == 0L) {
+                        "$tzName is ahead by $diffHours hours"
+                    } else {
+                        "$tzName is ahead by $diffHours hours $diffMinutesRemainder minutes"
+                    }
                 }
             }
-            else -> {
-                val tzName = timezone.ifEmpty { "Timezone" }
-                if (diffMinutesRemainder == 0L) {
-                    "$tzName is ahead by $diffHours hours"
-                } else {
-                    "$tzName is ahead by $diffHours hours $diffMinutesRemainder minutes"
-                }
-            }
-        }
 
         Pair(message, timesMatch)
     } catch (_: Exception) {
@@ -74,14 +72,9 @@ fun TimeZone.compareWithLocalTime(): Pair<String, Boolean> {
 /**
  * Get UTC offset string.
  */
-fun TimeZone.getUtcOffsetString(): String {
-    return utcOffset.ifEmpty { "N/A" }
-}
+fun TimeZone.getUtcOffsetString(): String = utcOffset.ifEmpty { "N/A" }
 
 /**
  * Get timezone abbreviation.
  */
-fun TimeZone.getAbbreviation(): String {
-    return abbreviation.ifEmpty { "N/A" }
-}
-
+fun TimeZone.getAbbreviation(): String = abbreviation.ifEmpty { "N/A" }

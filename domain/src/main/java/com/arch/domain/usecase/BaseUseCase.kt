@@ -38,4 +38,3 @@ abstract class SuspendUseCase<in Params, Result> {
  * Marker object for use cases that don't require parameters.
  */
 object NoParams
-

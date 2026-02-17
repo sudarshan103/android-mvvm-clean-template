@@ -14,12 +14,13 @@ import java.util.concurrent.TimeUnit
  * Logs request headers, body, response headers, body, and response time
  * Should only be used in debuggable builds
  */
-class HttpLoggingInterceptor(private val isDebug: Boolean = true) : Interceptor {
-
+class HttpLoggingInterceptor(
+    private val isDebug: Boolean = true
+) : Interceptor {
     companion object {
         private const val TAG = "HttpLogging"
         private const val MAX_BODY_LENGTH = 4096
-        private val UTF8 = StandardCharsets.UTF_8
+        private val utf8 = StandardCharsets.UTF_8
     }
 
     @Throws(IOException::class)
@@ -33,12 +34,13 @@ class HttpLoggingInterceptor(private val isDebug: Boolean = true) : Interceptor 
 
         logRequest(request)
 
-        val response: Response = try {
-            chain.proceed(request)
-        } catch (e: Exception) {
-            Log.e(TAG, "Request failed with exception: ${e.message}", e)
-            throw e
-        }
+        val response: Response =
+            try {
+                chain.proceed(request)
+            } catch (e: Exception) {
+                Log.e(TAG, "Request failed with exception: ${e.message}", e)
+                throw e
+            }
 
         val elapsedTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)
         logResponse(response, elapsedTime)
@@ -78,7 +80,10 @@ class HttpLoggingInterceptor(private val isDebug: Boolean = true) : Interceptor 
         Log.d(TAG, "--> END ${request.method}")
     }
 
-    private fun logResponse(response: Response, elapsedTime: Long) {
+    private fun logResponse(
+        response: Response,
+        elapsedTime: Long
+    ) {
         val startLine = "<-- ${response.code} ${response.message} (${elapsedTime}ms)"
         Log.d(TAG, startLine)
 
@@ -108,12 +113,12 @@ class HttpLoggingInterceptor(private val isDebug: Boolean = true) : Interceptor 
         Log.d(TAG, "<-- END HTTP")
     }
 
-    private fun requestBodyToString(request: Request): String {
-        return try {
+    private fun requestBodyToString(request: Request): String =
+        try {
             val copy = request.newBuilder().build()
             val buffer = okio.Buffer()
             copy.body?.writeTo(buffer)
-            val charset = copy.body?.contentType()?.charset(UTF8) ?: UTF8
+            val charset = copy.body?.contentType()?.charset(utf8) ?: utf8
             val body = buffer.readString(charset)
             if (body.length > MAX_BODY_LENGTH) {
                 body.substring(0, MAX_BODY_LENGTH) + "... (truncated)"
@@ -123,7 +128,6 @@ class HttpLoggingInterceptor(private val isDebug: Boolean = true) : Interceptor 
         } catch (e: Exception) {
             "(error reading request body: ${e.message})"
         }
-    }
 
     private fun isPlaintext(mediaType: MediaType?): Boolean {
         if (mediaType == null) return false
@@ -172,12 +176,10 @@ class HttpLoggingInterceptor(private val isDebug: Boolean = true) : Interceptor 
         }
     }
 
-    private fun isHeaderSensitive(name: String): Boolean {
-        return name.equals("Authorization", ignoreCase = true) ||
-               name.equals("Cookie", ignoreCase = true) ||
-               name.equals("Set-Cookie", ignoreCase = true) ||
-               name.equals("X-Auth-Token", ignoreCase = true) ||
-               name.equals("X-API-Key", ignoreCase = true)
-    }
+    private fun isHeaderSensitive(name: String): Boolean =
+        name.equals("Authorization", ignoreCase = true) ||
+            name.equals("Cookie", ignoreCase = true) ||
+            name.equals("Set-Cookie", ignoreCase = true) ||
+            name.equals("X-Auth-Token", ignoreCase = true) ||
+            name.equals("X-API-Key", ignoreCase = true)
 }
-

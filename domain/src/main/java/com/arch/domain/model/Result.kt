@@ -7,21 +7,26 @@ import com.arch.domain.exception.ApiException
  * Used as a return type for use cases following clean architecture principles.
  */
 sealed class Result<out T> {
-
     /**
      * Represents a successful result containing data.
      */
-    data class Success<out T>(val data: T) : Result<T>()
+    data class Success<out T>(
+        val data: T
+    ) : Result<T>()
 
     /**
      * Represents a failed result containing an exception.
      */
-    data class Error(val exception: ApiException) : Result<Nothing>()
+    data class Error(
+        val exception: ApiException
+    ) : Result<Nothing>()
 
     /**
      * Represents a loading state with optional progress indicator flag.
      */
-    data class Loading(val showProgress: Boolean = true) : Result<Nothing>()
+    data class Loading(
+        val showProgress: Boolean = true
+    ) : Result<Nothing>()
 
     /**
      * Returns true if this is a Success result.
@@ -51,11 +56,12 @@ sealed class Result<out T> {
     /**
      * Transforms the data if this is a Success result.
      */
-    inline fun <R> map(transform: (T) -> R): Result<R> = when (this) {
-        is Success -> Success(transform(data))
-        is Error -> this
-        is Loading -> this
-    }
+    inline fun <R> map(transform: (T) -> R): Result<R> =
+        when (this) {
+            is Success -> Success(transform(data))
+            is Error -> this
+            is Loading -> this
+        }
 
     /**
      * Executes the given block if this is a Success result.
@@ -81,4 +87,3 @@ sealed class Result<out T> {
         return this
     }
 }
-

@@ -10,7 +10,6 @@ import okhttp3.Response
 class AuthInterceptor(
     private val authToken: String? = null
 ) : Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
@@ -24,4 +23,3 @@ class AuthInterceptor(
         return chain.proceed(request)
     }
 }
-

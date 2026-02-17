@@ -1,0 +1,68 @@
+# Android Studio Custom VM Options
+# Place this file in: ~/.config/Google/AndroidStudio{VERSION}/studio64.vmoptions
+# Or use Help -> Edit Custom VM Options in Android Studio
+
+# Heap Size Settings - Conservative for 15GB RAM system
+# Initial heap size
+-Xms512m
+# Maximum heap size - 2GB to prevent overwhelming the system
+-Xmx2048m
+
+# Metaspace Settings
+-XX:MetaspaceSize=256m
+-XX:MaxMetaspaceSize=768m
+
+# Code Cache Settings
+-XX:ReservedCodeCacheSize=512m
+
+# Garbage Collection Settings
+# Use G1GC for better pause times
+-XX:+UseG1GC
+-XX:MaxGCPauseMillis=200
+
+# Performance Settings
+-XX:+UseCompressedOops
+
+# Error Handling
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=/tmp/android-studio-heap-dump.hprof
+-XX:ErrorFile=/tmp/android-studio-error.log
+
+# Soft Reference Settings
+# Keep soft references alive longer
+-XX:SoftRefLRUPolicyMSPerMB=50
+
+# UI Performance
+-Dsun.java2d.opengl=true
+-Dsun.java2d.d3d=false
+-Dawt.useSystemAAFontSettings=lcd
+-Dswing.aatext=true
+
+# File System Performance
+-Djava.io.tmpdir=/tmp
+
+# Network Settings
+-Djava.net.preferIPv4Stack=true
+
+# Reduce console output
+-Djava.awt.headless=false
+
+# Kotlin Compiler Settings - reduced for system stability
+-Dkotlin.daemon.jvm.options=-Xmx1536m
+
+# Android Studio Settings
+-Didea.max.intellisense.filesize=2500
+-Didea.cycle.buffer.size=disabled
+-Didea.fatal.error.notification=disabled
+
+# Debugging (remove in production)
+# -XX:+PrintGCDetails
+# -XX:+PrintGCTimeStamps
+# -Xlog:gc*:file=/tmp/gc.log
+
+# Disable aggressive GC to reduce CPU usage
+-XX:+DisableExplicitGC
+
+# Reduce indexing overhead to prevent background CPU spikes
+-Didea.max.content.load.filesize=20000
+

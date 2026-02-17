@@ -9,14 +9,15 @@ import retrofit2.http.Path
  * Base URL: https://time.now/
  */
 interface TimeZoneApiService {
-
     /**
      * Get current time for a specific timezone
      * @param timezone The timezone path (e.g., UTC, Asia/Kolkata)
      * Endpoint: /developer/api/timezone/{timezone}
      */
     @GET("/developer/api/timezone/{timezone}")
-    suspend fun getTimeZone(@Path("timezone") timezone: String): Response<TimeZoneResponse>
+    suspend fun getTimeZone(
+        @Path("timezone") timezone: String
+    ): Response<TimeZoneResponse>
 }
 
 /**
@@ -40,4 +41,3 @@ data class TimeZoneResponse(
     val utcOffset: String? = null,
     val weekNumber: Int? = null
 )
-

@@ -15,7 +15,6 @@ import javax.net.ssl.X509TrustManager
  * DO NOT use in production as it defeats the purpose of HTTPS security.
  */
 object SslConfig {
-
     private const val TLS_VERSION = "TLSv1.2"
 
     /**
@@ -24,8 +23,8 @@ object SslConfig {
      * DO NOT use in production - this disables certificate validation.
      */
     @Suppress("CustomX509TrustManager", "TrustAllX509TrustManager")
-    fun createPermissiveTrustManager(): X509TrustManager {
-        return object : X509TrustManager {
+    fun createPermissiveTrustManager(): X509TrustManager =
+        object : X509TrustManager {
             override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
 
             override fun checkClientTrusted(
@@ -42,7 +41,6 @@ object SslConfig {
                 // Intentionally empty - accepts all server certificates
             }
         }
-    }
 
     /**
      * Create an SSL context with custom trust manager.
@@ -78,7 +76,6 @@ object SslConfig {
     private class Tls12SocketFactory(
         private val delegate: SSLSocketFactory
     ) : SSLSocketFactory() {
-
         private val tlsProtocols = arrayOf("TLSv1.2", "TLSv1.1")
 
         override fun getDefaultCipherSuites(): Array<String> = delegate.defaultCipherSuites
@@ -90,35 +87,31 @@ object SslConfig {
             host: String?,
             port: Int,
             autoClose: Boolean
-        ): java.net.Socket {
-            return enableTls(delegate.createSocket(s, host, port, autoClose))
-        }
+        ): java.net.Socket = enableTls(delegate.createSocket(s, host, port, autoClose))
 
-        override fun createSocket(host: String?, port: Int): java.net.Socket {
-            return enableTls(delegate.createSocket(host, port))
-        }
+        override fun createSocket(
+            host: String?,
+            port: Int
+        ): java.net.Socket = enableTls(delegate.createSocket(host, port))
 
         override fun createSocket(
             host: String?,
             port: Int,
             localHost: java.net.InetAddress?,
             localPort: Int
-        ): java.net.Socket {
-            return enableTls(delegate.createSocket(host, port, localHost, localPort))
-        }
+        ): java.net.Socket = enableTls(delegate.createSocket(host, port, localHost, localPort))
 
-        override fun createSocket(host: java.net.InetAddress?, port: Int): java.net.Socket {
-            return enableTls(delegate.createSocket(host, port))
-        }
+        override fun createSocket(
+            host: java.net.InetAddress?,
+            port: Int
+        ): java.net.Socket = enableTls(delegate.createSocket(host, port))
 
         override fun createSocket(
             address: java.net.InetAddress?,
             port: Int,
             localAddress: java.net.InetAddress?,
             localPort: Int
-        ): java.net.Socket {
-            return enableTls(delegate.createSocket(address, port, localAddress, localPort))
-        }
+        ): java.net.Socket = enableTls(delegate.createSocket(address, port, localAddress, localPort))
 
         private fun enableTls(socket: java.net.Socket): java.net.Socket {
             if (socket is javax.net.ssl.SSLSocket) {
@@ -128,6 +121,3 @@ object SslConfig {
         }
     }
 }
-
-
-

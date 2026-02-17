@@ -21,7 +21,9 @@ import java.util.concurrent.TimeUnit
  *     .withAuth("token123")
  *     .build()
  */
-class RetrofitBuilder(private val context: Context) {
+class RetrofitBuilder(
+    private val context: Context
+) {
     private var baseUrl: String = ""
     private var authToken: String? = null
     private val interceptors = mutableListOf<okhttp3.Interceptor>()
@@ -32,49 +34,54 @@ class RetrofitBuilder(private val context: Context) {
     /**
      * Set the base URL for this Retrofit instance
      */
-    fun baseUrl(url: String) = apply {
-        this.baseUrl = url
-    }
+    fun baseUrl(url: String) =
+        apply {
+            this.baseUrl = url
+        }
 
     /**
      * Set authentication token for requests
      * If set, token will be added to all requests via Authorization header
      */
-    fun withAuth(token: String) = apply {
-        this.authToken = token
-    }
+    fun withAuth(token: String) =
+        apply {
+            this.authToken = token
+        }
 
     /**
      * Add a custom interceptor
      */
-    fun addInterceptor(interceptor: okhttp3.Interceptor) = apply {
-        interceptors.add(interceptor)
-    }
+    fun addInterceptor(interceptor: okhttp3.Interceptor) =
+        apply {
+            interceptors.add(interceptor)
+        }
 
     /**
      * Set request timeout in seconds
      */
-    fun timeout(seconds: Long) = apply {
-        this.timeoutSeconds = seconds
-    }
+    fun timeout(seconds: Long) =
+        apply {
+            this.timeoutSeconds = seconds
+        }
 
     /**
      * Enable permissive SSL mode (accepts all certificates)
      * WARNING: Only use for development/testing with self-signed certificates
      * DO NOT use in production as it defeats the purpose of HTTPS
      */
-    fun withPermissiveSSL(enable: Boolean = true) = apply {
-        this.usePermissiveMode = enable
-    }
+    fun withPermissiveSSL(enable: Boolean = true) =
+        apply {
+            this.usePermissiveMode = enable
+        }
 
     /**
      * Set custom trust manager for SSL/TLS
      * Use this to handle certificate pinning or custom certificate authorities
      */
-    fun withCustomTrustManager(trustManager: javax.net.ssl.X509TrustManager) = apply {
-        this.customTrustManager = trustManager
-    }
-
+    fun withCustomTrustManager(trustManager: javax.net.ssl.X509TrustManager) =
+        apply {
+            this.customTrustManager = trustManager
+        }
 
     /**
      * Build the Retrofit instance with configured settings
@@ -82,10 +89,12 @@ class RetrofitBuilder(private val context: Context) {
     fun build(): Retrofit {
         require(baseUrl.isNotBlank()) { "Base URL must be set" }
 
-        val httpClientBuilder = OkHttpClient.Builder()
-            .connectTimeout(timeoutSeconds, TimeUnit.SECONDS)
-            .readTimeout(timeoutSeconds, TimeUnit.SECONDS)
-            .writeTimeout(timeoutSeconds, TimeUnit.SECONDS)
+        val httpClientBuilder =
+            OkHttpClient
+                .Builder()
+                .connectTimeout(timeoutSeconds, TimeUnit.SECONDS)
+                .readTimeout(timeoutSeconds, TimeUnit.SECONDS)
+                .writeTimeout(timeoutSeconds, TimeUnit.SECONDS)
 
         // Configure SSL/TLS
         configureSSL(httpClientBuilder)
@@ -111,7 +120,8 @@ class RetrofitBuilder(private val context: Context) {
 
         val okHttpClient = httpClientBuilder.build()
 
-        return Retrofit.Builder()
+        return Retrofit
+            .Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(GsonConfig.createGson()))
@@ -159,9 +169,10 @@ object RetrofitInstanceManager {
     fun getOrCreate(
         key: String = "default",
         factory: () -> Retrofit
-    ): Retrofit = synchronized(lock) {
-        instances.getOrPut(key) { factory() }
-    }
+    ): Retrofit =
+        synchronized(lock) {
+            instances.getOrPut(key) { factory() }
+        }
 
     /**
      * Clear a specific Retrofit instance
@@ -189,4 +200,3 @@ object RetrofitInstanceManager {
         noinline factory: () -> Retrofit
     ): T = getOrCreate(key, factory).create(T::class.java)
 }
-

@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
  * Manages its own BaseActivityViewModel for loading state observation
  */
 open class BaseActivity : ComponentActivity() {
-
     private var progressDialog: AlertDialog? = null
     protected val baseActivityViewModel: BaseActivityViewModel by viewModels()
 
@@ -45,11 +44,12 @@ open class BaseActivity : ComponentActivity() {
      */
     protected fun showProgressDialog(message: String = "Loading...") {
         if (progressDialog == null || !progressDialog!!.isShowing) {
-            progressDialog = MaterialAlertDialogBuilder(this)
-                .setTitle("Please wait")
-                .setMessage(message)
-                .setCancelable(false)
-                .show()
+            progressDialog =
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Please wait")
+                    .setMessage(message)
+                    .setCancelable(false)
+                    .show()
         }
     }
 
@@ -69,7 +69,7 @@ open class BaseActivity : ComponentActivity() {
      */
     protected inline fun <reified T> observeState(
         stateFlow: kotlinx.coroutines.flow.StateFlow<T>,
-        crossinline action: suspend (T) -> Unit
+        crossinline action: suspend (T) -> Unit,
     ) {
         lifecycleScope.launch {
             stateFlow.collect { state ->

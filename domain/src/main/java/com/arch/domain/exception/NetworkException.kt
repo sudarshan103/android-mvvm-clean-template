@@ -33,4 +33,3 @@ class NetworkIOException(
     message: String = "Network IO error",
     cause: Throwable? = null
 ) : ApiException(message, cause)
-

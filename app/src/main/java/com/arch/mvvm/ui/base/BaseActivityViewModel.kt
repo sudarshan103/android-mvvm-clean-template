@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.asStateFlow
  * BaseActivity manages this ViewModel and handles progress dialog visibility.
  */
 class BaseActivityViewModel : ViewModel() {
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -22,10 +21,11 @@ class BaseActivityViewModel : ViewModel() {
      * @param result The Result from domain layer
      */
     fun handleLoadingState(result: Result<*>) {
-        _isLoading.value = when (result) {
-            is Result.Loading -> result.showProgress
-            is Result.Success -> false
-            is Result.Error -> false
-        }
+        _isLoading.value =
+            when (result) {
+                is Result.Loading -> result.showProgress
+                is Result.Success -> false
+                is Result.Error -> false
+            }
     }
 }

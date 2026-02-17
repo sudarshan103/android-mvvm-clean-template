@@ -10,14 +10,16 @@ import kotlinx.coroutines.flow.Flow
  * Implementation resides in data layer.
  */
 interface TimeZoneRepository {
-
     /**
      * Get current time for a specific timezone.
      * @param timezone The timezone identifier (e.g., "UTC", "Asia/Kolkata", "America/New_York")
      * @param showProgress Whether to emit loading states
      * @return Flow emitting Result with TimeZone data
      */
-    fun getTimeZone(timezone: String, showProgress: Boolean = true): Flow<Result<TimeZone>>
+    fun getTimeZone(
+        timezone: String,
+        showProgress: Boolean = true
+    ): Flow<Result<TimeZone>>
 
     /**
      * Get current UTC time.
@@ -26,4 +28,3 @@ interface TimeZoneRepository {
      */
     fun getUtcTime(showProgress: Boolean = true): Flow<Result<TimeZone>>
 }
-

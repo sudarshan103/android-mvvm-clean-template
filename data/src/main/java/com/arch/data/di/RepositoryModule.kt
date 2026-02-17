@@ -15,11 +15,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
-
     @Binds
     @Singleton
-    abstract fun bindTimeZoneRepository(
-        impl: TimeZoneRepositoryImpl
-    ): TimeZoneRepository
+    abstract fun bindTimeZoneRepository(impl: TimeZoneRepositoryImpl): TimeZoneRepository
 }
-

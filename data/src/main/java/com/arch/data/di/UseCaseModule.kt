@@ -15,11 +15,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
-
     @Provides
     @ViewModelScoped
-    fun provideGetTimeZoneUseCase(
-        repository: TimeZoneRepository
-    ): GetTimeZoneUseCase = GetTimeZoneUseCase(repository)
+    fun provideGetTimeZoneUseCase(repository: TimeZoneRepository): GetTimeZoneUseCase = GetTimeZoneUseCase(repository)
 }
-

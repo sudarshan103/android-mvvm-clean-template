@@ -12,8 +12,9 @@ import okhttp3.Response
  * Interceptor that checks for internet connectivity
  * Throws InternetNotEnabledException if no network is available
  */
-class InternetCheckInterceptor(private val context: Context) : Interceptor {
-
+class InternetCheckInterceptor(
+    private val context: Context
+) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isInternetAvailable(context)) {
             throw InternetNotEnabledException("No internet connection available")
@@ -23,14 +24,14 @@ class InternetCheckInterceptor(private val context: Context) : Interceptor {
 
     @SuppressLint("MissingPermission")
     private fun isInternetAvailable(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE)
                 as? ConnectivityManager ?: return false
 
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
 
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 }
-

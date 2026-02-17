@@ -12,18 +12,16 @@ import kotlinx.coroutines.flow.Flow
 class GetTimeZoneUseCase(
     private val repository: TimeZoneRepository
 ) : FlowUseCase<GetTimeZoneUseCase.Params, Result<TimeZone>>() {
-
-    override fun invoke(params: Params): Flow<Result<TimeZone>> {
-        return repository.getTimeZone(
+    override fun invoke(params: Params): Flow<Result<TimeZone>> =
+        repository.getTimeZone(
             timezone = params.timezone,
             showProgress = params.showProgress
         )
-    }
 
     /**
      * Parameters for GetTimeZoneUseCase.
-     * @param timezone The timezone identifier (e.g., "UTC", "Asia/Kolkata")
-     * @param showProgress Whether to show loading indicator
+     * @property timezone The timezone identifier (e.g., "UTC", "Asia/Kolkata")
+     * @property showProgress Whether to show loading indicator
      */
     data class Params(
         val timezone: String,
@@ -34,4 +32,3 @@ class GetTimeZoneUseCase(
         const val UTC = "UTC"
     }
 }
-

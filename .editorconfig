@@ -1,0 +1,55 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+trim_trailing_whitespace = true
+
+[{*.kt,*.kts}]
+# Kotlin/Compose specific configuration
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+trim_trailing_whitespace = true
+
+# Disable a minimal set of Android/Compose exceptions
+ktlint_standard_function-naming = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_parameter-list-wrapping = disabled
+ktlint_standard_chain-method-continuation = disabled
+ktlint_standard_annotation = disabled
+
+# Configure function naming exceptions for Compose and testing annotations
+ktlint_function_naming_ignore_annotated = Composable,Test,Before,After
+
+# Disable trailing comma rules (better for Compose DSL readability)
+ktlint_standard_trailing-comma = disabled
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+
+# Keep important rules enabled
+ktlint_standard_no-wildcard-imports = enabled
+ktlint_standard_import-ordering = enabled
+ktlint_standard_final-newline = enabled
+ktlint_standard_no-empty-class-body = enabled
+ktlint_standard_string-template = enabled
+
+[*.gradle.kts]
+indent_size = 4
+
+[*.xml]
+indent_size = 4
+indent_style = space
+
+[*.{json,yml,yaml}]
+indent_size = 2

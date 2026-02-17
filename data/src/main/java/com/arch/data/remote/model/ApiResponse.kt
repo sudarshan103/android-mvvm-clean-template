@@ -51,9 +51,9 @@ fun <T> ApiResponse<T>.getDataOrNull(): T? = (this as? ApiResponse.Success)?.dat
 /**
  * Extension function to get exception or null
  */
-fun <T> ApiResponse<T>.getExceptionOrNull(): ApiException? = when (this) {
-    is ApiResponse.Error -> this.exception
-    is ApiResponse.Exception -> this.exception
-    else -> null
-}
-
+fun <T> ApiResponse<T>.getExceptionOrNull(): ApiException? =
+    when (this) {
+        is ApiResponse.Error -> this.exception
+        is ApiResponse.Exception -> this.exception
+        else -> null
+    }

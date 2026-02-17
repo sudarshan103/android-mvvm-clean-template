@@ -18,57 +18,62 @@ import javax.inject.Inject
  * Loading state is managed by BaseActivity through BaseActivityViewModel.
  */
 @HiltViewModel
-class TimeZoneViewModel @Inject constructor(
-    private val getTimeZoneUseCase: GetTimeZoneUseCase
-) : ViewModel() {
+class TimeZoneViewModel
+    @Inject
+    constructor(
+        private val getTimeZoneUseCase: GetTimeZoneUseCase,
+    ) : ViewModel() {
+        private val _utcTimeState = MutableStateFlow<Result<TimeZone>?>(null)
+        val utcTimeState: StateFlow<Result<TimeZone>?> = _utcTimeState.asStateFlow()
 
-    private val _utcTimeState = MutableStateFlow<Result<TimeZone>?>(null)
-    val utcTimeState: StateFlow<Result<TimeZone>?> = _utcTimeState.asStateFlow()
+        private val _timeZoneState = MutableStateFlow<Result<TimeZone>?>(null)
+        val timeZoneState: StateFlow<Result<TimeZone>?> = _timeZoneState.asStateFlow()
 
-    private val _timeZoneState = MutableStateFlow<Result<TimeZone>?>(null)
-    val timeZoneState: StateFlow<Result<TimeZone>?> = _timeZoneState.asStateFlow()
+        private val _errorMessage = MutableStateFlow<String?>(null)
+        val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
-
-    /**
-     * Fetch time for specific timezone.
-     * @param timezone The timezone identifier (e.g., "UTC", "Asia/Kolkata")
-     */
-    fun fetchTimeZone(timezone: String) {
-        viewModelScope.launch {
-            val params = GetTimeZoneUseCase.Params(
-                timezone = timezone,
-                showProgress = true
-            )
-            getTimeZoneUseCase(params).collect { result ->
-                handleResult(result, isUtc = timezone == UTC)
+        /**
+         * Fetch time for specific timezone.
+         * @param timezone The timezone identifier (e.g., "UTC", "Asia/Kolkata")
+         */
+        fun fetchTimeZone(timezone: String) {
+            viewModelScope.launch {
+                val params =
+                    GetTimeZoneUseCase.Params(
+                        timezone = timezone,
+                        showProgress = true,
+                    )
+                getTimeZoneUseCase(params).collect { result ->
+                    handleResult(result, isUtc = timezone == UTC)
+                }
             }
         }
-    }
 
-    private fun handleResult(result: Result<TimeZone>, isUtc: Boolean) {
-        if (isUtc) {
-            _utcTimeState.value = result
-        } else {
-            _timeZoneState.value = result
+        private fun handleResult(
+            result: Result<TimeZone>,
+            isUtc: Boolean,
+        ) {
+            if (isUtc) {
+                _utcTimeState.value = result
+            } else {
+                _timeZoneState.value = result
+            }
+
+            when (result) {
+                is Result.Success -> _errorMessage.value = null
+                is Result.Error -> _errorMessage.value = result.exception.message ?: "Unknown error occurred"
+                is Result.Loading -> Unit
+            }
         }
 
-        when (result) {
-            is Result.Success -> _errorMessage.value = null
-            is Result.Error -> _errorMessage.value = result.exception.message ?: "Unknown error occurred"
-            is Result.Loading -> Unit
+        /**
+         * Clear error message.
+         */
+        fun clearError() {
+            _errorMessage.value = null
+        }
+
+        companion object {
+            const val UTC = "UTC"
         }
     }
-
-    /**
-     * Clear error message.
-     */
-    fun clearError() {
-        _errorMessage.value = null
-    }
-
-    companion object {
-        const val UTC = "UTC"
-    }
-}

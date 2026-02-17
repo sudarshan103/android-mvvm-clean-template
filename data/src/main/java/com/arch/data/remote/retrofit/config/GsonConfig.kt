@@ -12,8 +12,8 @@ object GsonConfig {
      * Create a Gson instance with custom field naming strategy
      * Converts snake_case in JSON to camelCase in Kotlin properties and vice versa
      */
-    fun createGson(): Gson = GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .create()
+    fun createGson(): Gson =
+        GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create()
 }
-

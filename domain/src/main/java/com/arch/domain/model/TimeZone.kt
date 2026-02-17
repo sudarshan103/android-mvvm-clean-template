@@ -21,4 +21,3 @@ data class TimeZone(
     val dstUntil: String? = null,
     val utcDatetime: String? = null
 )
-

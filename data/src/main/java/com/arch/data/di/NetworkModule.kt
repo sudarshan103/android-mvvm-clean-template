@@ -18,7 +18,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     /**
      * Provide TimeZone API Retrofit instance
      * This endpoint doesn't require authentication
@@ -28,10 +27,11 @@ object NetworkModule {
     @Singleton
     fun provideTimeZoneRetrofit(
         @ApplicationContext context: Context
-    ): Retrofit = RetrofitBuilder(context)
-        .baseUrl("https://time.now")
-        .withPermissiveSSL(enable = true)  // For development/testing only
-        .build()
+    ): Retrofit =
+        RetrofitBuilder(context)
+            .baseUrl("https://time.now")
+            .withPermissiveSSL(enable = true) // For development/testing only
+            .build()
 
     /**
      * Provide TimeZone API Service
@@ -41,4 +41,3 @@ object NetworkModule {
     fun provideTimeZoneApiService(retrofit: Retrofit): TimeZoneApiService =
         retrofit.create(TimeZoneApiService::class.java)
 }
-

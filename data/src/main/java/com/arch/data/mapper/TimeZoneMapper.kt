@@ -8,12 +8,11 @@ import com.arch.domain.model.TimeZone
  * Keeps the mapping logic centralized and testable.
  */
 object TimeZoneMapper {
-
     /**
      * Maps TimeZoneResponse (DTO) to TimeZone (Domain Model).
      */
-    fun TimeZoneResponse.toDomain(): TimeZone {
-        return TimeZone(
+    fun TimeZoneResponse.toDomain(): TimeZone =
+        TimeZone(
             abbreviation = abbreviation.orEmpty(),
             datetime = datetime.orEmpty(),
             timezone = timezone.orEmpty(),
@@ -30,6 +29,4 @@ object TimeZoneMapper {
             dstUntil = dstUntil,
             utcDatetime = utcDatetime
         )
-    }
 }
-

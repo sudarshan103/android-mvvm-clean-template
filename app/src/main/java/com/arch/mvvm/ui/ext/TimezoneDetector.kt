@@ -10,7 +10,6 @@ import java.util.TimeZone
  * Tries multiple methods to get accurate timezone information
  */
 object TimezoneDetector {
-
     /**
      * Detect device timezone using multiple fallback methods
      * Priority:
@@ -50,8 +49,8 @@ object TimezoneDetector {
      * @param countryCode ISO country code (e.g., "IN", "US")
      * @return Timezone ID or null if not found
      */
-    private fun getTimezoneFromCountryCode(countryCode: String): String? {
-        return when (countryCode.uppercase(Locale.getDefault())) {
+    private fun getTimezoneFromCountryCode(countryCode: String): String? =
+        when (countryCode.uppercase(Locale.getDefault())) {
             "IN" -> "Asia/Kolkata"
             "US" -> "America/New_York" // Default US timezone
             "GB" -> "Europe/London"
@@ -70,15 +69,14 @@ object TimezoneDetector {
             "NZ" -> "Pacific/Auckland"
             else -> null
         }
-    }
 
     /**
      * Get the offset of given timezone from UTC in a human-readable format
      * @param timezoneId Timezone ID (e.g., "Asia/Kolkata")
      * @return Offset string (e.g., "+05:30", "-08:00")
      */
-    fun getTimezoneOffset(timezoneId: String): String {
-        return try {
+    fun getTimezoneOffset(timezoneId: String): String =
+        try {
             val timezone = TimeZone.getTimeZone(timezoneId)
             val offsetMs = timezone.getOffset(System.currentTimeMillis())
             val offsetHours = offsetMs / (1000 * 60 * 60)
@@ -89,6 +87,4 @@ object TimezoneDetector {
         } catch (_: Exception) {
             "N/A"
         }
-    }
 }
-
