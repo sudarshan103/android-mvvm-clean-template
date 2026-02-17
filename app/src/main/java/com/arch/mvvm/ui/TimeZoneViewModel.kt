@@ -48,26 +48,16 @@ class TimeZoneViewModel @Inject constructor(
     }
 
     private fun handleResult(result: Result<TimeZone>, isUtc: Boolean) {
+        if (isUtc) {
+            _utcTimeState.value = result
+        } else {
+            _timeZoneState.value = result
+        }
+
         when (result) {
-            is Result.Loading -> {
-                // Loading state handled by BaseActivity
-            }
-            is Result.Success -> {
-                _errorMessage.value = null
-                if (isUtc) {
-                    _utcTimeState.value = result
-                } else {
-                    _timeZoneState.value = result
-                }
-            }
-            is Result.Error -> {
-                _errorMessage.value = result.exception.message ?: "Unknown error occurred"
-                if (isUtc) {
-                    _utcTimeState.value = result
-                } else {
-                    _timeZoneState.value = result
-                }
-            }
+            is Result.Success -> _errorMessage.value = null
+            is Result.Error -> _errorMessage.value = result.exception.message ?: "Unknown error occurred"
+            is Result.Loading -> Unit
         }
     }
 
@@ -82,4 +72,3 @@ class TimeZoneViewModel @Inject constructor(
         const val UTC = "UTC"
     }
 }
-
