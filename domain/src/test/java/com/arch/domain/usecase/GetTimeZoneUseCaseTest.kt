@@ -179,4 +179,3 @@ class GetTimeZoneUseCaseTest : BaseUnitTest() {
         assertEquals("UTC", GetTimeZoneUseCase.UTC)
     }
 }
-

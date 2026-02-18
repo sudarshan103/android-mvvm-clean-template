@@ -248,4 +248,3 @@ class ResultTest : BaseUnitTest() {
         assertFalse(loadingCalled)
     }
 }
-
