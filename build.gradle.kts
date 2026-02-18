@@ -11,8 +11,9 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.google.services) apply false
-    id("org.jlleitschuh.gradle.ktlint") version "14.0.1" apply false
-    id("io.gitlab.arturbosch.detekt") version "1.23.8" apply false
+    alias(libs.plugins.kover) apply false
+    alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.detekt) apply false
 }
 
 val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")

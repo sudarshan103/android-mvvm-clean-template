@@ -3,8 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    id("org.jlleitschuh.gradle.ktlint")
-    id("io.gitlab.arturbosch.detekt")
+    alias(libs.plugins.kover)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -78,12 +79,6 @@ tasks.withType<org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask>().config
     }
 }
 
-// Run ktlint and detekt manually with: ./gradlew ktlintCheck detekt
-// This prevents automatic execution during builds which can freeze the system
-// tasks.matching { it.name == "check" }.configureEach {
-//     dependsOn("ktlintCheck", "detekt")
-// }
-
 dependencies {
     implementation(project(":domain"))
     implementation(libs.androidx.core.ktx)
@@ -95,8 +90,73 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core)
+
+    // Testing dependencies
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.okhttp.mockwebserver)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     detektPlugins(libs.detekt.formatting)
 }
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    // Dependency Injection modules
+                    "*.di.*",
+                    "*.di.*\$*",
+
+                    // Hilt generated
+                    "*_Factory",
+                    "*_Factory\$*",
+                    "*_HiltModules*",
+                    "*Hilt_*",
+                    "*_Impl*",
+                    "*_MembersInjector",
+                    "*Module_*",
+
+                    // Build config
+                    "*.BuildConfig",
+
+                    // Network infrastructure (complex Android dependencies)
+                    "*.remote.retrofit.builder.RetrofitBuilder",
+                    "*.remote.retrofit.builder.RetrofitBuilder\$*",
+                    "*.remote.retrofit.builder.RetrofitInstanceManager",
+                    "*.remote.retrofit.builder.RetrofitInstanceManager\$*",
+                    "*.remote.retrofit.config.SslConfig",
+                    "*.remote.retrofit.config.SslConfig\$*",
+                    "*.remote.retrofit.config.Tls12SocketFactory",
+
+                    // Interceptors (integration test territory)
+                    "*.remote.retrofit.interceptor.*",
+                    "*.remote.retrofit.interceptor.*\$*",
+
+                    // API service interfaces (Retrofit interfaces)
+                    "*.remote.retrofit.api.*ApiService"
+                )
+                annotatedBy(
+                    "*Module*",
+                    "*InstallIn*",
+                    "*Provides*",
+                    "*Binds*"
+                )
+            }
+        }
+
+        verify {
+            rule("Minimum line coverage of 85%") {
+                bound {
+                    minValue = 85
+                    coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.LINE
+                }
+            }
+        }
+    }
+}
+

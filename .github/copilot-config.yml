@@ -1,0 +1,132 @@
+# GitHub Copilot Safe Auto-Approve Commands Configuration
+# These commands are considered safe to run automatically without user confirmation
+
+safe_commands:
+  # Static Analysis & Code Quality (Read-only operations)
+  - pattern: "./gradlew detekt"
+    description: "Run Detekt static analysis"
+    risk_level: "low"
+
+  - pattern: "./gradlew detekt --console=plain"
+    description: "Run Detekt with plain console output"
+    risk_level: "low"
+
+  - pattern: "./gradlew ktlintCheck"
+    description: "Run KtLint formatting checks"
+    risk_level: "low"
+
+  # Test Execution (Read-only verification)
+  - pattern: "./gradlew test"
+    description: "Run all unit tests"
+    risk_level: "low"
+
+  - pattern: "./gradlew testDebug*"
+    description: "Run debug variant tests"
+    risk_level: "low"
+
+  - pattern: "./gradlew testRelease*"
+    description: "Run release variant tests"
+    risk_level: "low"
+
+  - pattern: "./gradlew :*:test"
+    description: "Run tests for specific module"
+    risk_level: "low"
+
+  - pattern: "./gradlew :*:testDebug*"
+    description: "Run debug tests for specific module"
+    risk_level: "low"
+
+  # Code Coverage (Read-only analysis)
+  - pattern: "./gradlew koverHtmlReport"
+    description: "Generate HTML code coverage report"
+    risk_level: "low"
+
+  - pattern: "./gradlew koverXmlReport"
+    description: "Generate XML code coverage report"
+    risk_level: "low"
+
+  - pattern: "./gradlew koverVerify"
+    description: "Verify code coverage meets thresholds"
+    risk_level: "low"
+
+  - pattern: "./gradlew koverLog"
+    description: "Log code coverage metrics"
+    risk_level: "low"
+
+  # Build Verification (Safe with clean)
+  - pattern: "./gradlew clean"
+    description: "Clean build artifacts"
+    risk_level: "low"
+
+  - pattern: "./gradlew clean detekt"
+    description: "Clean and run static analysis"
+    risk_level: "low"
+
+  - pattern: "./gradlew clean test"
+    description: "Clean and run tests"
+    risk_level: "low"
+
+  # Help & Information Commands
+  - pattern: "./gradlew tasks"
+    description: "List all available Gradle tasks"
+    risk_level: "low"
+
+  - pattern: "./gradlew --version"
+    description: "Show Gradle version"
+    risk_level: "low"
+
+  - pattern: "./gradlew dependencies"
+    description: "Show project dependencies"
+    risk_level: "low"
+
+  # Git Operations (Read-only)
+  - pattern: "git status"
+    description: "Show working tree status"
+    risk_level: "low"
+
+  - pattern: "git log*"
+    description: "Show commit logs"
+    risk_level: "low"
+
+  - pattern: "git diff*"
+    description: "Show changes"
+    risk_level: "low"
+
+  - pattern: "git branch"
+    description: "List branches"
+    risk_level: "low"
+
+# Commands that should NEVER be auto-approved
+unsafe_commands:
+  - pattern: "./gradlew publish*"
+    reason: "Publishing artifacts to repositories"
+
+  - pattern: "./gradlew install*"
+    reason: "Installing artifacts"
+
+  - pattern: "./gradlew assemble*"
+    reason: "Building APK/AAB artifacts"
+
+  - pattern: "./gradlew bundle*"
+    reason: "Building app bundles"
+
+  - pattern: "rm -rf*"
+    reason: "Destructive file operations"
+
+  - pattern: "git push*"
+    reason: "Modifying remote repository"
+
+  - pattern: "git commit*"
+    reason: "Creating commits"
+
+  - pattern: "./gradlew ktlintFormat"
+    reason: "Modifying source files"
+
+  - pattern: "adb install*"
+    reason: "Installing apps on device"
+
+# Risk Levels:
+# - low: Read-only operations, can be safely auto-approved
+# - medium: May create artifacts but doesn't modify source or publish
+# - high: Modifies source code or external systems, requires approval
+

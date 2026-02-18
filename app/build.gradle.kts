@@ -4,8 +4,9 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose)
-    id("org.jlleitschuh.gradle.ktlint")
-    id("io.gitlab.arturbosch.detekt")
+    alias(libs.plugins.kover)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -91,12 +92,6 @@ tasks.withType<org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask>().config
     }
 }
 
-// Run ktlint and detekt manually with: ./gradlew ktlintCheck detekt
-// This prevents automatic execution during builds which can freeze the system
-// tasks.matching { it.name == "check" }.configureEach {
-//     dependsOn("ktlintCheck", "detekt")
-// }
-
 dependencies {
     // DI wiring: app needs data module for Hilt modules while still coding only against domain interfaces.
     implementation(project(":data"))
@@ -115,7 +110,14 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // Testing dependencies
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.androidx.arch.core.testing)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -124,3 +126,71 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     detektPlugins(libs.detekt.formatting)
 }
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    // Activities and Fragments
+                    "*Activity",
+                    "*Activity\$*",
+                    "*Fragment",
+                    "*Fragment\$*",
+                    "*.base.BaseActivity",
+                    "*.base.BaseActivity\$*",
+
+                    // Composable UI
+                    "*ComposableSingletons*",
+                    "*.ui.screen.*",
+                    "*.ui.screen.*\$*",
+                    "*.ui.theme.*",
+                    "*.ui.theme.*\$*",
+
+                    // Application class
+                    "*App",
+                    "*App\$*",
+                    "*.App",
+
+                    // Hilt generated
+                    "*_Factory",
+                    "*_Factory\$*",
+                    "*_HiltModules*",
+                    "*Hilt_*",
+                    "*_Impl*",
+                    "*_MembersInjector",
+                    "*Module_*",
+
+                    // Data binding
+                    "*.databinding.*",
+                    "*.DataBinderMapperImpl",
+                    "*.DataBinderMapperImpl\$*",
+
+                    // Build config
+                    "*.BuildConfig",
+
+                    // Utilities requiring Android Context
+                    "*.ext.TimezoneDetector",
+                    "*.ext.TimezoneDetector\$*"
+                )
+                annotatedBy(
+                    "*Composable*",
+                    "*HiltAndroidApp*",
+                    "*AndroidEntryPoint*",
+                    "*Module*",
+                    "*InstallIn*"
+                )
+            }
+        }
+
+        verify {
+            rule("Minimum line coverage of 85%") {
+                bound {
+                    minValue = 85
+                    coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.LINE
+                }
+            }
+        }
+    }
+}
+

@@ -13,6 +13,8 @@ Clean Architecture Android template with MVVM, Hilt DI, Retrofit, and Compose UI
 - Retrofit + OkHttp networking
 - TLS 1.2 socket support for Android 7 devices
 - Compose UI with Material 3
+- Comprehensive unit testing with MockK
+- 85% code coverage enforcement with Kover
 
 ## Requirements
 - Android Studio (latest stable recommended)
@@ -28,6 +30,47 @@ Clean Architecture Android template with MVVM, Hilt DI, Retrofit, and Compose UI
 - Open in Android Studio
 - Select `app` configuration
 - Run on emulator or device (API 24+)
+
+## Testing
+Run all unit tests:
+```zsh
+./gradlew test
+```
+
+Run tests with coverage verification (85% threshold):
+```zsh
+./gradlew test koverVerify
+```
+
+Generate HTML coverage reports:
+```zsh
+./gradlew koverHtmlReport
+```
+
+View coverage reports:
+- App: `app/build/reports/kover/html/index.html`
+- Data: `data/build/reports/kover/html/index.html`
+- Domain: `domain/build/reports/kover/html/index.html`
+
+## Quality Checks
+
+Run Detekt static analysis:
+```zsh
+./gradlew detekt
+# or use: make detekt
+```
+
+Run KtLint formatting check:
+```zsh
+./gradlew ktlintCheck
+# or use: make ktlint
+```
+
+Run full quality check (clean + detekt + tests + coverage):
+```zsh
+./gradlew clean detekt test koverVerify
+# or use: make quality
+```
 
 ## Notes
 - The `app` module depends on `data` only for DI wiring. App code should use domain interfaces.

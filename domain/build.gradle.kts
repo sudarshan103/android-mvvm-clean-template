@@ -1,8 +1,9 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
-    id("org.jlleitschuh.gradle.ktlint")
-    id("io.gitlab.arturbosch.detekt")
+    alias(libs.plugins.kover)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.detekt)
 }
 
 java {
@@ -18,6 +19,13 @@ kotlin {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+
+    // Testing dependencies
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+
     detektPlugins(libs.detekt.formatting)
 }
 
@@ -60,8 +68,36 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     }
 }
 
-// Run ktlint and detekt manually with: ./gradlew ktlintCheck detekt
-// This prevents automatic execution during builds which can freeze the system
-// tasks.matching { it.name == "check" }.configureEach {
-//     dependsOn("ktlintCheck", "detekt")
-// }
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    // Repository interfaces (no implementation)
+                    "*.repository.*",
+
+                    // Base UseCase interfaces
+                    "*.usecase.FlowUseCase",
+                    "*.usecase.SuspendUseCase",
+                    "*.usecase.NoParams",
+
+                    // Exception classes (simple data classes)
+                    "*.exception.*Exception",
+
+                    // Data classes with no logic
+                    "*.model.TimeZone"
+                )
+            }
+        }
+
+        verify {
+            rule("Minimum line coverage of 85%") {
+                bound {
+                    minValue = 85
+                    coverageUnits = kotlinx.kover.gradle.plugin.dsl.CoverageUnit.LINE
+                }
+            }
+        }
+    }
+}
+
